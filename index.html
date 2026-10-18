@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>My First Website</title>
@@ -6,5 +6,100 @@
   <body>
     <h1>Hello World!</h1>
     <p>This is my very first website.</p>
+
+    <div id="bar-chart" style="max-width: 640px"></div>
+
+    <!-- Chargement de D3.js depuis un CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+
+    <script>
+      //On écrit ici une fonction pour les graphiques.
+      // La fonction ne reçoit pas de paramètre (d'où le () )
+      //les paramètres sont affectés directement dans la fonction.
+      // Ils n'entrent donc pas en conflit avec les autres variables
+      (() => {
+        const data = [
+          { name: "A", value: 1 },
+          { name: "B", value: 5 },
+          { name: "C", value: 8 },
+          { name: "D", value: 10 },
+        ];
+
+        const width = 640;
+        const height = 400;
+        const margin = { top: 30, right: 20, bottom: 40, left: 40 };
+
+        //Création d'une zone de dessin SVG sur la page
+        //on définit ici sa taille et ses propriétés
+        //Le viewBox permet au graphique de s'adapter à la largeur disponible.
+        const svg = d3
+          .select("#bar-chart") //on applique le type bar-chart
+          .append("svg") //ajout d'un svg
+          .attr("viewBox", `0 0 ${width} ${height}`) //coordonnées : x de départ, y de départ, largeur, hauteur
+          .attr("role", "img") //indique qu'il s'agit d'une image.
+          .attr(
+            "aria-label",
+            "Diagramme en barres : A = 1, B = 5, C = 8, D = 10",
+          ) //descriptif du graphique
+          .style("display", "block") //pour éviter l'espace inféireur en cas d'intégration dans une ligne de texte
+          .style("width", "100%") //le svg prend toute la largeur de son conteneur
+          .style("height", "auto");
+
+        // Création de lÉchelle horizontale : catégories.
+        const x = d3
+          .scaleBand()
+          .domain(data.map((d) => d.name))
+          .range([margin.left, width - margin.right])
+          .padding(0.3);
+
+        // Échelle verticale : valeurs, avec une origine à zéro.
+        const y = d3
+          .scaleLinear()
+          .domain([0, d3.max(data, (d) => d.value)])
+          .nice()
+          .range([height - margin.bottom, margin.top]);
+
+        // Axe horizontal.
+        svg
+          .append("g") //g signifie "group", permet de traiter tous les éléments
+          //on définit d'abord une position avec attr puis on dit ce qui sera dedans : tous les éléments de l'axe horizontal
+          .attr("transform", `translate(0, ${height - margin.bottom})`) //tous les éléments de l'axe horizontal sont déplacés
+          .call(d3.axisBottom(x));
+
+        // Axe vertical.
+        svg
+          .append("g")
+          .attr("transform", `translate(${margin.left}, 0)`)
+          .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("d")));
+        //création d'un axe vertical avec les 5 graduations et les nombres (format entier) à gauche de la ligne
+        //y fournit l'échelle
+
+        // Barres.
+        svg
+          .append("g")
+          .attr("fill", "#2563eb")
+          .selectAll("rect")
+          .data(data)
+          .join("rect")
+          .attr("x", (d) => x(d.name))
+          .attr("y", (d) => y(d.value))
+          .attr("width", x.bandwidth())
+          .attr("height", (d) => y(0) - y(d.value));
+
+        // Valeurs au-dessus des barres.
+        svg
+          .append("g")
+          .attr("text-anchor", "middle")
+          .attr("font-family", "sans-serif")
+          .attr("font-size", 14)
+          .attr("fill", "#111827")
+          .selectAll("text")
+          .data(data)
+          .join("text")
+          .attr("x", (d) => x(d.name) + x.bandwidth() / 2)
+          .attr("y", (d) => y(d.value) - 8)
+          .text((d) => d.value);
+      })();
+    </script>
   </body>
 </html>
