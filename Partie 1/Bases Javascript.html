@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <body>
+    <p id="text">Click the button to style me!</p>
+    <button id="btn">Style the paragraph</button>
+
+    <script>
+      document.getElementById("btn").addEventListener("click", function () {
+        const text = document.getElementById("text");
+        text.style.border = "2px solid teal";
+        text.style.backgroundColor = "#e0f7fa";
+        text.style.padding = "12px";
+      });
+
+      const add = (x, y) => {
+        return (x + y) * 2;
+      };
+      console.log(add(3, 7));
+
+      const sideA = 3;
+      const sideB = 4;
+
+      const hypotenuse = (a, b) => {
+        return Math.sqrt(a ** 2 + b ** 2);
+      };
+      const hypotenuse = Math.sqrt(sideA ** 2 + sideB ** 2);
+
+      // Use backticks and ${} to insert the variable
+      console.log(`hypothenuse is ${hypotenuse}`);
+
+      const countries = ["France", "Germany", "Spain", "Italy", "Portugal"];
+
+      // Log: "There are X countries in the list"
+      console.log(`There are ${countries.length} countries in the list`);
+
+      const data = [
+        { country: "France", population: 67 },
+        { country: "Germany", population: 83 },
+        { country: "Spain", population: 47 },
+      ];
+
+      const large = data.filter((d) => {
+        return d.population > 50;
+      });
+
+      // Log: "The dataset has X countries"
+      console.log(`The dataset has ${data.length} countries`);
+
+      const multiply = (x, y) => x * y;
+
+      const status = temperature > 30 ? "hot" : "no";
+      console.log(status); // should log "hot"
+
+      const largeCountryNames = data
+        .filter((d) => {
+          return d.population > 50;
+        })
+        .map((d) => {
+          return d.country;
+        });
+
+      const numbers = [1, 2, 3, 4, 5];
+
+      // Option 1: write the function directly inside map
+      const doubled = numbers.map((n) => {
+        return n * 2;
+      });
+      console.log(doubled); // [2, 4, 6, 8, 10]
+
+      // Option 2: define the function first, then pass it
+      const triple = (n) => {
+        return n * 3;
+      };
+      const tripled = numbers.map(triple);
+      console.log(tripled); // [3, 6, 9, 12, 15]
+    </script>
+  </body>
+</html>
